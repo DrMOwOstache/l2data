@@ -14,11 +14,12 @@ typedef SetNode* node;
 
 class SetNode {
 public:
-	friend SortedSet;
-
+	friend class SortedSet;
 	SetNode(TComp da, node nextN);
 	TComp element();
 	node next();
+	void setNext(node& );
+
 
 private:
 	TComp data;
@@ -27,6 +28,7 @@ private:
 };
 
 class SortedSet {
+	//friend class SetNode;
 	friend class SortedSetIterator;
 private:
 	node begining;
