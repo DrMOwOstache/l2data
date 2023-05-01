@@ -37,6 +37,9 @@ private:
 	node findPos(TComp elem);
 
 public:
+
+	void Show();
+
 	//constructor
 	SortedSet(Relation r);
 

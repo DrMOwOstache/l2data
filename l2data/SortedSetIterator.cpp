@@ -1,5 +1,6 @@
 #include "SortedSetIterator.h"
 #include <exception>
+#include <iostream>
 
 using namespace std;
 
@@ -15,21 +16,29 @@ void SortedSetIterator::first() {
 
 
 void SortedSetIterator::next() {
-	if (iter->next() != nullptr)
-		iter->next();
+	if (valid())
+	{
+		//cout << iter->element() << '\n';
+		iter = iter->next();
+	}
 	else
-		exception;
+		throw exception();
 }
 
 
 TElem SortedSetIterator::getCurrent()
 {
-	return iter->element();
+	if(valid())
+		return iter->element();
+	else
+		throw exception();
 }
 
 bool SortedSetIterator::valid() const {
 	if (iter != nullptr)
-		return false;
-	return true;
+	{
+		return true;
+	}
+	return false;
 }
 

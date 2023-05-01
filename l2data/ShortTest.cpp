@@ -2,6 +2,7 @@
 #include "SortedSet.h"
 #include "SortedSetIterator.h"
 #include <assert.h>
+#include <iostream>
 
 bool r2(TComp e1, TComp e2) {
 	if (e1 <= e2) {
@@ -27,12 +28,17 @@ void testAll() {
 	e = it1.getCurrent();
 	iverif = 0;
 	vverif[iverif++] = e;
+	//std::cout << e << it1.getCurrent() << '\n';
 	it1.next();
+	//SortedSetIterator some = it1;
+	//some.next();
 	while (it1.valid()) {
+		//std::cout << e << ' ' << it1.getCurrent() << ' '<< some.getCurrent() << '\n';
 		assert(e < it1.getCurrent());
 		e = it1.getCurrent();
 		vverif[iverif++] = e;
 		it1.next();
+		//some.next();
 	}
 	assert((vverif[0] == 1) && (vverif[1] == 5) && (vverif[2] == 10));
 
@@ -45,6 +51,7 @@ void testAll() {
 	assert(s.add(10) == true);
 	assert(s.add(7) == true);
 	assert(s.add(1) == false);
+	//s.Show();
 	assert(s.add(10) == false);
 	assert(s.add(-3) == true);
 	assert(s.size() == 5);

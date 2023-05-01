@@ -1,5 +1,6 @@
 #include "SortedSet.h"
 #include "SortedSetIterator.h"
+#include <iostream>
 
 //node manage
 SetNode::SetNode(TComp da, node nextN)
@@ -15,6 +16,8 @@ TComp SetNode::element()
 
 node SetNode::next()
 {
+	if (this->nextNode == nullptr)
+		return nullptr;
 	return this->nextNode;
 }
 
@@ -24,10 +27,21 @@ node SetNode::next()
 node SortedSet::findPos(TComp elem)
 {
 	node aux = begining;
+	if (aux == nullptr)
+		return nullptr;
+	if (elem == aux->data)
+		return nullptr;
 	if (relate(elem, aux->data) == false)
 	{
-		while (relate(elem, aux->nextNode->data) && aux->nextNode != nullptr)
-			aux = aux->nextNode;
+		bool ok = false;
+		//std::cout << aux->nextNode << '\n';
+		while (ok == false && aux->nextNode != nullptr)
+		{
+			if (relate(elem, aux->nextNode->data) == true || aux->nextNode->data == elem)
+				ok = true;
+			else
+				aux = aux->nextNode;
+		}
 		return aux;
 	}
 	return nullptr;
@@ -61,6 +75,14 @@ bool SortedSet::add(TComp elem) {
 			number++;
 			return true;
 		}
+		if (aux->nextNode == nullptr)
+		{
+			node p = new SetNode(elem, nullptr);
+			aux->nextNode = p;
+			//std::cout << '&' << p->data << '\n';
+			number++;
+			return true;
+		}
 		if (aux->nextNode->data == elem)
 			return false;
 		else
@@ -78,38 +100,48 @@ bool SortedSet::add(TComp elem) {
 
 
 bool SortedSet::remove(TComp elem) {
-	node aux = findPos(elem);
-	if (aux == nullptr)
+	if (begining != nullptr)
 	{
-		if (begining->data != elem)
-			return false;
-		node p = begining;
-		begining = begining->nextNode;
-		delete p;
-		number--;
-		return true;
+		node aux = findPos(elem);
+		if (aux == nullptr)
+		{
+			if (begining->data != elem)
+				return false;
+			node p = begining;
+			begining = begining->nextNode;
+			delete p;
+			number--;
+			return true;
+		}
+		if (aux->data == elem)
+		{
+			node p = aux->nextNode;
+			aux->nextNode = aux->nextNode->nextNode;
+			delete p;
+			number--;
+			return true;
+		}
+		if (aux->nextNode->data == elem)
+		{
+			node p = aux->nextNode;
+			aux->nextNode = aux->nextNode->nextNode;
+			delete p;
+			number--;
+			return true;
+		}
 	}
-	if (aux->nextNode->data == elem)
-	{
-		node p = aux->nextNode;
-		aux->nextNode = aux->nextNode->nextNode;
-		delete p;
-		number--;
-		return true;
-	}
-	
 	return false;
 }
 
 
 bool SortedSet::search(TComp elem) const {
 	node aux = begining;
-	if (aux->data == elem)
-		return true;
-	while (relate(elem, aux->nextNode->data) && aux->nextNode != nullptr)
+	while (aux != nullptr)
+	{
+		if (aux->data == elem)
+			return true;
 		aux = aux->nextNode;
-	if (aux->nextNode->data == elem)
-		return true;
+	}
 	return false;
 }
 
@@ -139,4 +171,12 @@ SortedSet::~SortedSet() {
 	number = 0;
 }
 
-
+void SortedSet::Show()
+{
+	node p = begining;
+	while (p != nullptr)
+	{
+		std::cout << p->data << '\n';
+		p = p->nextNode;
+	}
+}
